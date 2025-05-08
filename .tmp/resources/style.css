@@ -1,0 +1,1038 @@
+:root {
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --secondary-color: #10b981;
+    --secondary-hover: #059669;
+    --danger-color: #ef4444;
+    --warning-color: #eab308;
+    --info-color: #0ea5e9;
+    --muted-color: #6b7280;
+    --light-gray: #f3f4f6;
+    --medium-gray: #e5e7eb;
+    --dark-gray: #374151;
+    --text-color: #1f2937;
+    --bg-color: #f9fafb;
+    --card-bg: #ffffff;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --wrapper-bg:#e5e5e5;
+}
+
+body {
+    font-family: var(--font-family);
+    background: var(--bg-color);
+    margin: 0;
+    padding: 30px;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.help-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.help-button:hover {
+    background-color: #0056b3;
+}
+
+#wrapper{
+    margin: 0 auto;
+    padding: 20px;
+    background: var(--wrapper-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+.card {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--dark-gray);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+h2 i {
+    color: var(--primary-color);
+}
+
+/* --- Upload Section --- */
+.upload-card {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.upload-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--secondary-color);
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+    font-weight: 500;
+    max-width: 200px;
+}
+
+.upload-button:hover {
+    background: var(--secondary-hover);
+}
+
+.upload-button i {
+    margin-right: 8px;
+}
+
+.file-name-display {
+    font-style: italic;
+    color: var(--muted-color);
+    margin-left: 5px;
+    font-size: 0.9em;
+}
+
+/* --- General Button Styling --- */
+button {
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover:not(:disabled) {
+    background: var(--primary-hover);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.7;
+    margin-top: 0;
+}
+
+.action-buttons {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* --- Loader Styles --- */
+.loader {
+    display: none;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+    margin-left: 8px;
+}
+
+button.loading .button-text {
+    opacity: 0;
+}
+
+button.loading .loader {
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: 0;
+}
+
+@keyframes spin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+#processLoader.active, #aiLoader.active {
+    display: inline-block;
+}
+
+/* --- Filter Section --- */
+.filter-card h2 {
+    margin-bottom: 15px;
+}
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap to the next line on smaller screens if needed */
+    gap: 18px; /* This existing gap will create space between the columns */
+    align-items: flex-start; /* Aligns items to the top, useful if columns have different heights */
+    margin-bottom: 10px;
+}
+
+/* Style for direct div children of .filter-controls to make them 1/3 width */
+.filter-controls > div {
+    flex-grow: 1; /* Allow columns to grow and fill available space */
+    flex-shrink: 1; /* Allow columns to shrink if necessary */
+    flex-basis: calc((100% - 36px) / 3); /* Calculates 1/3 width considering two 18px gaps (36px total) */
+    box-sizing: border-box; /* Ensures padding and border are included in the width calculation */
+    /* min-width: 200px; */ /* Optional: Uncomment to set a minimum width for columns */
+}
+
+/* 
+  The following #additionalInstructionsContainer rule helps override any remaining inline styles.
+  It's best to remove width, max-width, and margin auto/specific values from the HTML style attribute.
+*/
+#additionalInstructionsContainer {
+    width: auto !important; 
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important; /* Vertical alignment is handled by align-items: flex-start on .filter-controls */
+}
+
+.filter-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+.filter-container label {
+    font-weight: 600;
+    color: var(--dark-gray);
+    margin-bottom: 0;
+    display: block;
+}
+.styled-checkbox {
+    margin-top: 10px;
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    font-size: 1em;
+    user-select: none;
+    display: flex;
+    align-items: center;
+}
+.styled-checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.styled-checkbox .checkmark {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    height: 18px;
+    width: 18px;
+    background-color: #fff;
+    border: 2px solid var(--primary-color, #0078d4);
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.styled-checkbox input:checked ~ .checkmark {
+    background-color: var(--primary-color, #0078d4);
+    border-color: var(--primary-color, #0078d4);
+}
+.styled-checkbox .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.styled-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+.styled-checkbox .checkmark:after {
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+    content: "";
+}
+
+#showAllColumnsToggle {
+    accent-color: var(--primary-color);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+#currencySelector {
+    padding: 6px 10px;
+    border: 1px solid var(--medium-gray, #ccc);
+    border-radius: var(--border-radius, 4px);
+    font-size: 1em;
+    background: #fff;
+    color: var(--text-color, #222);
+    width: auto;
+    max-width: 120px;
+    appearance: none;
+}
+
+select[multiple] {
+    height: 120px;
+    width: 100%;
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius);
+    padding: 8px;
+    font-size: 0.95em;
+}
+select[multiple]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+.filter-container input[type="text"] {
+    width: calc(100% - 18px);
+    padding: 8px;
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius);
+    font-size: 0.95em;
+}
+.filter-container input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* --- Collapsible Sections --- */
+details.collapsible-card {
+    padding: 0;
+}
+details.collapsible-card > summary {
+    padding: 20px 25px;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--medium-gray);
+}
+details[open].collapsible-card > summary {
+    border-bottom: 1px solid var(--medium-gray);
+}
+details.collapsible-card > summary h2 {
+    margin: 0;
+    flex-grow: 1;
+}
+details.collapsible-card > summary::before {
+    content: '\f0da';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-right: 15px;
+    transition: transform 0.2s ease-in-out;
+    color: var(--muted-color);
+}
+details[open].collapsible-card > summary::before {
+    transform: rotate(90deg);
+}
+.table-container {
+    padding: 0 25px 25px 25px;
+    overflow-x: auto;
+}
+
+/* --- Table Styling --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 13px;
+    border: 1px solid var(--medium-gray);
+}
+th, td {
+    padding: 10px 12px;
+    border: 1px solid var(--medium-gray);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+td {
+    padding: 10px 12px;
+    border: 1px solid var(--medium-gray);
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+th {
+    background-color: var(--light-gray);
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+}
+th .sort-arrow {
+    font-size: 0.8em;
+    margin-left: 5px;
+    color: var(--muted-color);
+}
+tr:nth-child(even) {
+    background: var(--light-gray);
+}
+tr:hover {
+    background-color: #e0e7ff;
+}
+.highlight {
+    background: #fffbeb !important;
+    font-weight: 500;
+}
+.bold-revenue {
+    background: #dcfce7;
+    font-weight: 600;
+    color: #065f46;
+}
+.action-label{
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+/* --- Badge Styles (Using Font Awesome) --- */
+.badge-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 1em;
+    /* color: #fff; */ /* REMOVED global white color */
+    cursor: help;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    vertical-align: middle;
+}
+.strongconv { background: var(--secondary-color); color: #fff; /* ADDED color #fff */ }
+.promote    { background: #f97316; color: #fff; /* ADDED color #fff */ }
+.hidden     { background: #6366f1; color: #fff; /* ADDED color #fff */ }
+.aov        { background: var(--primary-color); color: #fff; /* ADDED color #fff */ }
+.efficient  { background: #8b5cf6; color: #fff; /* ADDED color #fff */ }
+.volume     { background: #14b8a6; color: #fff; /* ADDED color #fff */ }
+.lowupt     { background: #d946ef; color: #fff; /* ADDED color #fff */ }
+.influencer { background: var(--info-color); color: #fff; /* ADDED color #fff */ }
+.poorconv   { background: var(--danger-color); color: #fff; /* ADDED color #fff */ }
+.ignored    { background: var(--muted-color); color: #fff; /* ADDED color #fff */ }
+.lowroi     { background: var(--warning-color); color: #fff; /* ADDED color #fff */ }
+.consistent { background: #22c55e; color: #fff; } /* Tailwind Green 500 */
+.needsreview { background: #78716c; color: #fff; } /* Tailwind Stone 500 */
+.noactivity { background: #a1a1aa; color: #fff; } /* Tailwind Zinc 400 */
+.clickernotcloser { background: #f472b6; color: #fff; } /* Tailwind Pink 400 */
+.overexposed { background: #06b6d4; color: #fff; } /* Tailwind Cyan 500 */
+.premium { background: #fbbf24; color: #fff; } /* Tailwind Amber 400 - Differentiate from Hidden Gem (purple) & High AOV (blue) */
+
+/* --- AI Report Container --- */
+#aiReportContainer {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid var(--medium-gray);
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    line-height: 1.7;
+}
+#aiReportContainer h1,
+#aiReportContainer h2,
+#aiReportContainer h3 {
+    margin-top: 1.2em;
+    margin-bottom: 0.6em;
+    color: var(--dark-gray);
+    font-weight: 600;
+}
+#aiReportContainer h1 { font-size: 1.5em; }
+#aiReportContainer h2 { font-size: 1.3em; }
+#aiReportContainer h3 { font-size: 1.1em; }
+#aiReportContainer ul,
+#aiReportContainer ol {
+    margin-left: 25px;
+    margin-bottom: 1em;
+}
+#aiReportContainer li {
+    margin-bottom: 0.6em;
+}
+#aiReportContainer p {
+    margin-bottom: 1em;
+}
+#aiReportContainer code {
+    background-color: var(--light-gray);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 0.9em;
+    color: var(--dark-gray);
+}
+#aiReportContainer pre {
+    background-color: var(--light-gray);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    overflow-x: auto;
+    border: 1px solid var(--medium-gray);
+}
+#aiReportContainer pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.9em;
+}
+#aiReportContainer.loading {
+    color: var(--muted-color);
+    font-style: italic;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* --- Section Headers --- */
+.summary-header, .ai-report-header, .insights-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+    margin-top: 8px;
+}
+.summary-flex-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+/* Styles for experience and action names */
+.experience-name-link,
+.experience-name-text {
+  font-weight: bold;
+  /* Add other common styles here */
+}
+
+.action-details {
+  font-size: 1.1em;
+  color: #555;
+  margin-top: 4px; /* Add some space above the action details */
+}
+
+.action-label {
+  font-weight: 700;
+}
+
+.action-name-link,
+.action-name-text {
+  /* Styles for action names, can be customized */
+}
+
+/* Ensure links have a consistent appearance */
+a.experience-name-link,
+a.action-name-link {
+  text-decoration: none;
+  color: #007bff; /* Standard link color */
+}
+
+a.experience-name-link:hover,
+a.action-name-link:hover {
+  text-decoration: underline;
+}
+
+.table-container table th,
+.table-container table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  vertical-align: top; /* Ensures content aligns to the top */
+}
+
+/* Experience and Action Name Styling */
+.experience-name {
+  font-weight: bold;
+  /* Additional styling for experience name if needed */
+}
+
+.action-details {
+  margin-top: 4px; /* Add a little space between experience and action */
+}
+
+.action-label {
+  font-size: 0.9em;
+  color: #555;
+  margin-right: 5px;
+}
+
+.action-name {
+  font-size: 0.9em;
+  color: #333;
+  /* Additional styling for action name if needed */
+}
+
+.experience-name-link,
+.action-name-link {
+  text-decoration: none;
+  color: inherit; /* Inherit color from parent, can be overridden */
+}
+
+.experience-name-link:hover,
+.action-name-link:hover {
+  text-decoration: underline;
+  color: #007bff; /* Example hover color */
+}
+
+/* ...existing styles... */
+
+.definitions-key-container {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-large);
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: var(--shadow-light);
+}
+
+.definitions-key-container h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.definitions-key-container h3 {
+    color: var(--text-color);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.definitions-key-container ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.definitions-key-container li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 0.9em;
+}
+
+.definitions-key-container li strong {
+    color: var(--text-color-dark);
+}
+
+.definitions-key-container li i {
+    margin-left: 5px;
+    margin-right: 2px;
+}
+
+/* Ensure it is placed at the bottom */
+body > .definitions-key-container {
+    order: 99; /* If using flex/grid on body, or just place it last in HTML */
+}
+
+/* If inside a card that is part of a flex/grid layout */
+.collapsible-card > .definitions-key-container {
+    width: 100%; /* Ensure it takes full width if nested */
+}
+
+/* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 700px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.modal-content p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.modal-content ul {
+  margin-bottom: 15px;
+  padding-left: 20px;
+}
+
+.modal-content ul li {
+  margin-bottom: 5px;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* --- Section Headers --- */
+.summary-header, .ai-report-header, .insights-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+    margin-top: 8px;
+}
+.summary-flex-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+/* Styles for experience and action names */
+.experience-name-link,
+.experience-name-text {
+  font-weight: bold;
+  /* Add other common styles here */
+}
+
+.action-details {
+  font-size: 1.1em;
+  color: #555;
+  margin-top: 4px; /* Add some space above the action details */
+}
+
+.action-label {
+  font-weight: 700;
+}
+
+.action-name-link,
+.action-name-text {
+  /* Styles for action names, can be customized */
+}
+
+/* Ensure links have a consistent appearance */
+a.experience-name-link,
+a.action-name-link {
+  text-decoration: none;
+  color: #007bff; /* Standard link color */
+}
+
+a.experience-name-link:hover,
+a.action-name-link:hover {
+  text-decoration: underline;
+}
+
+.table-container table th,
+.table-container table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  vertical-align: top; /* Ensures content aligns to the top */
+}
+
+/* Experience and Action Name Styling */
+.experience-name {
+  font-weight: bold;
+  /* Additional styling for experience name if needed */
+}
+
+.action-details {
+  margin-top: 4px; /* Add a little space between experience and action */
+}
+
+.action-label {
+  font-size: 0.9em;
+  color: #555;
+  margin-right: 5px;
+}
+
+.action-name {
+  font-size: 0.9em;
+  color: #333;
+  /* Additional styling for action name if needed */
+}
+
+.experience-name-link,
+.action-name-link {
+  text-decoration: none;
+  color: inherit; /* Inherit color from parent, can be overridden */
+}
+
+.experience-name-link:hover,
+.action-name-link:hover {
+  text-decoration: underline;
+  color: #007bff; /* Example hover color */
+}
+
+/* ...existing styles... */
+
+.definitions-key-container {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-large);
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: var(--shadow-light);
+}
+
+.definitions-key-container h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.definitions-key-container h3 {
+    color: var(--text-color);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.definitions-key-container ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.definitions-key-container li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 0.9em;
+}
+
+.definitions-key-container li strong {
+    color: var(--text-color-dark);
+}
+
+.definitions-key-container li i {
+    margin-left: 5px;
+    margin-right: 2px;
+}
+
+/* Ensure it is placed at the bottom */
+body > .definitions-key-container {
+    order: 99; /* If using flex/grid on body, or just place it last in HTML */
+}
+
+/* If inside a card that is part of a flex/grid layout */
+.collapsible-card > .definitions-key-container {
+    width: 100%; /* Ensure it takes full width if nested */
+}
+/* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 700px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.modal-content p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.modal-content ul {
+  margin-bottom: 15px;
+  padding-left: 20px;
+}
+
+.modal-content ul li {
+  margin-bottom: 5px;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.help-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.help-button:hover {
+    background-color: #0056b3;
+}
+
+/* --- Modal Styles (Shared by Help and API Key Modals) --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 10% from the top and centered */
+    padding: 25px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 600px; /* Maximum width */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.modal-content p {
+    line-height: 1.6;
+    color: #555;
+}
+
+.modal-content ul {
+    padding-left: 20px;
+}
+
+.modal-content ul li {
+    margin-bottom: 8px;
+}
+
+.modal-content input[type="text"] {
+    width: calc(100% - 22px); /* Full width minus padding and border */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.modal-content .button, /* Style for buttons inside the modal */
+.modal-content button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content .button:hover,
+.modal-content button:hover {
+    background-color: #0056b3;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Basic styling for the app */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+h1 {
+  color: #1a1a1a;
+}

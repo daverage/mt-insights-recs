@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><script>
+    window.addEventListener("beforeunload", () => {
+      navigator.sendBeacon("/exit");
+    });
+  </script>
+    <meta charset="UTF-8" />
+    <title>Recommendation Insight Summary</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Local Styles -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- PapaParse -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Other libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <!-- Google AI SDK via ES Module -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://unpkg.com/@google/generative-ai?module"
+        }
+      }
+    </script>
+    <!-- Local Script (defines window.sdkLoaded via state.js and sets up event listeners) -->
+    <script src="main.js" type="module"></script>
+    <!-- Ensure state.js is loaded explicitly before the SDK loader -->
+    <script src="state.js" type="module"></script>
+    <script type="module">
+      import { GoogleGenerativeAI } from "@google/generative-ai";
+      window.GoogleGenerativeAI = GoogleGenerativeAI;
+      // window.sdkLoaded should be defined by now, as state.js has been processed.
+      if (typeof window.sdkLoaded === 'function') {
+        window.sdkLoaded();
+      } else {
+        console.error("AI SDK Loader: window.sdkLoaded is not defined. AI features might not initialise correctly. Check script loading order and state.js.");
+      }
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <button id="helpBtn" class="button help-button" style="position: absolute; top: 10px; right: 10px;">
+        <i class="fa-solid fa-circle-question"></i> Help
+    </button>
+    <div class="card upload-card">
+      <h1 style="margin:0;">Recommendation Insight Generator</h1>
+      <p>
+        Upload a CSV file containing recommendation data to generate insights and summaries.<br>
+        Use this Looker Report - 
+        <a href="https://kibo.looker.com/looks/2372" target="_blank">https://kibo.looker.com/looks/2372</a><br>
+        Apply the filters you need and download the report as a CSV with Visualization options applied checked, formatted and all results.
+      </p>
+    </div>
+
+    <div class="card report-title-card">
+      <h2>Report Title</h2>
+      <input type="text" id="reportTitleInput" placeholder="Enter report title (optional)" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 1em;" />
+    </div>
+
+    <div class="card upload-card">
+      <h2>Upload Summary CSV</h2>
+      <!-- Styled File Upload Button -->
+      <label for="fileInput" class="button upload-button">
+        <i class="fa-solid fa-upload"></i> Choose CSV File
+      </label>
+      <input type="file" id="fileInput" accept=".csv" style="display:none;" />
+      <span id="fileName" class="file-name-display">No file chosen</span>
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button id="goBtn" disabled>
+          <span class="button-text">Generate Summary</span>
+          <span class="loader" id="processLoader"></span>
+        </button>
+        <button id="downloadBtn" disabled>
+          <i class="fa-solid fa-download"></i> Download CSV
+        </button>
+        <button id="generatePromptBtn" disabled>
+          <i class="fa-solid fa-file-lines"></i> Generate Prompt
+        </button>
+        <button id="aiReportBtn" disabled>
+          <span class="button-text">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate AI Report
+          </span>
+          <span class="loader" id="aiLoader"></span>
+        </button>
+        <button id="downloadWordBtn" disabled>
+          <i class="fa-solid fa-file-word"></i> Download Report (Word)
+        </button>
+      </div>
+    </div>
+    <div class="card filter-card">
+      <h2>
+        <i class="fa-solid fa-filter"></i> Filters
+      </h2>
+      <div class="filter-controls">
+        <div class="filter-container">
+          <label for="badgeFilter"><strong>Badges:</strong></label>
+          <select id="badgeFilter" multiple></select>
+          <label class="styled-checkbox">
+            <input type="checkbox" id="showAllColumnsToggle">
+            <span class="checkmark"></span> Show all metrics
+          </label>
+        </div>
+        <div class="filter-container">
+          <label for="experienceFilter"><strong>Experiences:</strong></label>
+          <select id="experienceFilter" multiple></select>
+          <input type="text" id="experienceSearch" placeholder="Search experiences...">
+        </div>
+        <div id="additionalInstructionsContainer">
+          <label for="additionalInstructions" style="display: block; margin-bottom: 5px; font-weight: bold;">
+            Additional Instructions for Report (Optional):
+          </label>
+          <textarea id="additionalInstructions" rows="3" maxlength="500" placeholder="e.g., Focus on strategies with high revenue but low CTR. Consider seasonality." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; resize: vertical; font-family: inherit; font-size: 0.9em;" disabled></textarea>
+          <div id="charCountDisplay" style="font-size: 0.8em; text-align: right; color: #555;">0/500</div>
+        </div>
+      </div>
+    </div>
+    <!-- Collapsible Summary Table -->
+    <details class="card collapsible-card" open>
+      <summary>
+        <div class="summary-flex-header">
+          <h2>
+            <i class="fa-solid fa-table-list"></i> Recommendation Summary
+          </h2>
+          <div id="summaryHeader" class="summary-header"></div>
+        </div>
+      </summary>
+      <div id="summary" class="table-container"></div>
+    </details>
+
+    <!-- Collapsible Insights Table -->
+    <details class="card collapsible-card" open>
+      <summary>
+        <div class="summary-flex-header">
+          <h2>
+            <i class="fa-solid fa-lightbulb"></i> Insight Summary
+          </h2>
+          <div id="insightsHeader" class="insights-header"></div>
+        </div>
+      </summary>
+      <div id="insights" class="table-container"></div>
+    </details>
+
+    <!-- AI Report Section -->
+    <details class="card collapsible-card" open>
+      <summary>
+        <div class="summary-flex-header">
+          <h2>
+            <i class="fa-solid fa-lightbulb"></i> AI Summary
+          </h2>
+          <div id="aiReportHeader" class="ai-report-header"></div>
+        </div>
+      </summary>
+      <div id="aiReportContainer" class="table-container"></div>
+
+      <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    </details>
+
+    <!-- NEW Definitions Key Card -->
+    <details class="card collapsible-card" id="definitionsCard">
+      <summary>
+        <div class="summary-flex-header">
+          <h2>
+            <i class="fa-solid fa-key"></i> Definitions Key
+          </h2>
+        </div>
+      </summary>
+      <div id="definitionsKeyContainer" class="definitions-key-container">
+        <!-- The H2 that was previously here is now in the summary -->
+        <div id="badgesKey"></div>
+        <div id="calculatedColumnsKey"></div>
+      </div>
+    </details>
+  </div>
+    <!-- Help Modal -->
+<div id="helpModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" id="closeHelpModal">&times;</span>
+    <h2>How to Use This Page</h2>
+    <p><strong>1. Upload CSV:</strong></p>
+    <ul>
+      <li>Click "Choose CSV File" to select your recommendation data CSV.</li>
+      <li>The CSV should be from the specified Looker Report (link provided). Ensure you download with visualization options applied, formatted, and all results.</li>
+    </ul>
+    <p><strong>2. Report Title (Optional):</strong></p>
+    <ul>
+      <li>Enter a custom title for your downloadable Word report.</li>
+    </ul>
+    <p><strong>3. Generate Summary:</strong></p>
+    <ul>
+      <li>Once a valid CSV is chosen, click "Generate Summary".</li>
+      <li>This processes the data and displays it in the "Recommendation Summary" and "Insight Summary" tables below.</li>
+    </ul>
+    <p><strong>4. Filters:</strong></p>
+    <ul>
+      <li>Use the "Badges" and "Experiences" dropdowns to filter the displayed data.</li>
+      <li>You can search within the "Experiences" filter.</li>
+      <li>Check "Show all metrics" to see all columns in the Recommendation Summary table; otherwise, a core set is shown.</li>
+      <li>Optionally, provide "Additional Instructions" for the AI report to guide its focus.</li>
+    </ul>
+    <p><strong>5. Download CSV:</strong></p>
+    <ul>
+      <li>Downloads the currently filtered data from the Recommendation Summary table as a CSV file.</li>
+    </ul>
+    <p><strong>6. Generate Prompt:</strong></p>
+    <ul>
+      <li>Creates a detailed text prompt (including a summary of your filtered data) that you can copy and use with an external AI model (like Gemini on AI Studio).</li>
+    </ul>
+    <p><strong>7. Generate AI Report:</strong></p>
+    <ul>
+      <li>Uses the Gemini API to automatically generate an AI-powered analysis based on your filtered data and any additional instructions.</li>
+      <li>The report will appear in the "AI Summary" section.</li>
+    </ul>
+    <p><strong>8. Download Report (Word):</strong></p>
+    <ul>
+      <li>Once an AI report is generated, you can download the AI summary, along with the data tables and definitions key, as a formatted Word (.docx) document.</li>
+    </ul>
+    <p><strong>9. Tables:</strong></p>
+    <ul>
+      <li><strong>Recommendation Summary:</strong> Displays the processed data. Click column headers to sort.</li>
+      <li><strong>Insight Summary:</strong> Highlights specific rows based on certain criteria (e.g., flagged for review).</li>
+      <li><strong>AI Summary:</strong> Shows the AI-generated report or the prompt.</li>
+      <li><strong>Definitions Key:</strong> Explains the badges and calculated metrics used in the tables.</li>
+      <li>All tables are collapsible by clicking their headers.</li>
+    </ul>
+  </div>
+</div>
+<!-- API Key Modal -->
+<div id="apiKeyModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close-button">&times;</span> <!-- Added close button -->
+    <h2>Enter Gemini API Key</h2>
+    <p>To use the AI Report generation feature, you need to provide your Google AI Studio API key.</p>
+    <div>
+      <strong>How to get an API Key:</strong>
+      <ol>
+        <li>Visit <a href="https://aistudio.google.com/" target="_blank">https://aistudio.google.com/</a> and sign in.</li>
+        <li>Open or create a new project.</li>
+        <li>Click the <strong>Get API key</strong> option in the menu (often on the left or under a project overview).</li>
+        <li>Click "Create API Key" (you might need to choose a project).</li>
+        <li>Copy the generated API key.</li>
+      </ol>
+    </div>
+    <hr>
+    <label for="apiKeyInput">API Key:</label>
+    <input type="text" id="apiKeyInput" placeholder="Enter your AIza... API Key" style="width: 90%; padding: 8px; margin-bottom: 10px;">
+    <button id="saveApiKeyButton" class="button">Save Key</button> <!-- Corrected ID to saveApiKeyButton -->
+    <p id="apiKeyMessage" style="margin-top: 10px;"></p>
+    <p><small>The key will be saved to your browser's local storage.</small></p> <!-- Updated help text -->
+  </div>
+</div>
+  </body>
+</html>

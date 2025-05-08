@@ -113,9 +113,9 @@ export function handleFile(file) {
     // ui.renderSummaryHeader(); // This might be needed if summary buttons change
 
     // Scroll to the filter section
-    if (dom.badgeFilter) { // Check if the filter element exists
-        ui.scrollToSection(dom.badgeFilter);
-    }
+    // if (dom.badgeFilter) { // Check if the filter element exists
+    //     ui.scrollToSection(dom.badgeFilter);
+    // }
 }
 
 // Handles input in the additional instructions textarea to update character count.
@@ -158,7 +158,7 @@ export function generatePromptText() {
     Generate a professional, semi-formal summary suitable for business stakeholders using **Markdown**. Use the provided CSV data and badge meanings exclusively. Structure the report clearly as follows:
 
     ## Executive Summary
-    Start with 1-2 sentences summarizing the key findings from the provided data.
+    Start with 2 or 3 sentences summarizing the key findings from the provided data.
 
     ## 1. Top Performers
        - Identify strategies showing strong positive signals within the provided data (e.g., high revenue, 'Strong Conversion', 'High AOV', high desirability score). Use a bulleted list.
@@ -563,7 +563,7 @@ export function downloadWordReport() {
             <meta charset="UTF-8">
             <title>${pageTitle}</title>
             <style>
-                body { font-family: sans-serif; line-height: 1.6; padding: 10px; margin: 0 auto; color: #333; font-size: 11pt; }
+                body { font-family: sans-serif; line-height: 1.7; padding: 10px; margin: 0 auto; color: #333; font-size: 11pt; }
                 h1, h2, h3, h4 { color: #111; margin-top: 1em; margin-bottom: 0.5em; }
                 h1 { text-align: center; margin-bottom: 20px; font-size: 18pt; }
                 h2 { border-bottom: 2px solid #007bff; padding-bottom: 5px; font-size: 14pt; }
@@ -576,9 +576,9 @@ export function downloadWordReport() {
                 .ai-report-content h1 { font-size: 18pt; color: #1F4E79; margin-top: 1em; margin-bottom: 0.4em; border-bottom: 1px solid #AEC9E0; padding-bottom: 0.1em; }
                 .ai-report-content h2 { font-size: 15pt; color: #2E75B5; margin-top: 0.8em; margin-bottom: 0.3em; }
                 .ai-report-content h3 { font-size: 12pt; color: #1F4E79; margin-top: 0.6em; margin-bottom: 0.2em; }
-                .ai-report-content p { margin-bottom: 0.6em; line-height: 1.5; }
-                .ai-report-content ul, .ai-report-content ol { padding-left: 0.25in; list-style-position: outside; margin-bottom: 0.7em; line-height: 1.5; }
-                .ai-report-content li { text-indent: 0; padding-left: 0.25in; margin-bottom: 0.3em; }
+                .ai-report-content p { margin-bottom: 0.6em; line-height: 1.7; }
+                .ai-report-content ul, .ai-report-content ol { padding-left: 0.25in; list-style-position: outside; margin-bottom: 0.7em; line-height: 1.7; }
+                .ai-report-content li { text-indent: 0; padding-left: 0.25in; margin-bottom: 0.3em; line-height: 1.7; }
                 .ai-report-content strong, .ai-report-content b { font-weight: bold; }
                 .ai-report-content em, .ai-report-content i { font-style: italic; }
                 .ai-report-content code { font-family: 'Consolas', 'Courier New', monospace; background-color: #f5f5f5; padding: 1px 4px; font-size: 10pt; border: 1px solid #e0e0e0; border-radius: 3px; }
@@ -586,8 +586,8 @@ export function downloadWordReport() {
                 table tbody tr td:first-child { font-size: 12pt; text-align: center; vertical-align: middle; }
                 .definitions-key-word { margin-top: 1em; /* Removed padding, border, border-radius */ }
                 .definitions-key-word h3 { font-size: 12pt; color: #1F4E79; /* Matched .ai-report-content h3 color */ margin-top: 0.6em; /* Matched .ai-report-content h3 margin */ margin-bottom: 0.2em; /* Matched .ai-report-content h3 margin */ border-bottom: 1px solid #eee; /* Added general h3 border */ padding-bottom: 4px; /* Added general h3 padding */ }
-                .definitions-key-word ul { padding-left: 0.25in; list-style-position: outside; list-style-type: disc; margin-bottom: 0.7em; /* Matched .ai-report-content ul */ line-height: 1.5; /* Matched .ai-report-content ul */ }
-                .definitions-key-word li { text-indent: 0; padding-left: 0.25in; margin-bottom: 0.3em; /* Matched .ai-report-content li */ line-height: 1.5; /* Matched .ai-report-content li */ }
+                .definitions-key-word ul { padding-left: 0.25in; list-style-position: outside; list-style-type: disc; margin-bottom: 0.7em; /* Matched .ai-report-content ul */ line-height: 1.7; /* Matched .ai-report-content ul */ }
+                .definitions-key-word li { text-indent: 0; padding-left: 0.25in; margin-bottom: 0.3em; /* Matched .ai-report-content li */ line-height: 1.7; /* Matched .ai-report-content li */ }
                 a { color: #005A9C; text-decoration: underline; }
                 .page-break { page-break-before: always; }
 
@@ -603,6 +603,7 @@ export function downloadWordReport() {
             <h2>Filtered Data Summary</h2>
             ${summaryTableHtmlForWord}
 
+            <div class="page-break"></div>
             <h2>Insights from Filtered Data</h2>
             ${insightsTableHtmlForWord}
             
