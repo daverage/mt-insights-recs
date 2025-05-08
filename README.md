@@ -22,38 +22,38 @@ This application, "MT Insights: Recommendations," allows you to upload CSV files
 
 To run this application, you need the main application binary for your operating system and the `resources.neu` file. Both files **must be placed in the same directory**.
 
-After building the project (e.g., by running `neu build`), you will typically find these files in the `dist/mt-insights-recommendations/` directory.
+You can find the necessary files for download at:
+[https://github.com/daverage/mt-insights-recs/tree/main/dist/mt-insights-recommendations](https://github.com/daverage/mt-insights-recs/tree/main/dist/mt-insights-recommendations)
 
-**Download Links (Placeholder):**
-*These links are placeholders. You will need to update them if you host these files, for example, on GitHub Releases. Otherwise, users will need to build the project themselves (see below).*
+Download the `resources.neu` file and the appropriate executable for your operating system from the link above.
 
-*   `resources.neu`: `[Link to your hosted resources.neu]` (Locally: `dist/mt-insights-recommendations/resources.neu`)
+*   **`resources.neu`**: Download this file.
 
 ### Windows
 
-1.  **Download**:
-    *   Executable: `mt-insights-recommendations-win_x64.exe` - `[Link to your hosted Windows binary]` (Locally: `dist/mt-insights-recommendations/mt-insights-recommendations-win_x64.exe`)
-    *   Resources: `resources.neu` (see above)
-    *   *Note*: If using bundles created by `build-scripts/build-win.sh`, ensure `WebView2Loader.dll` is also present with the executable.
-2.  Place `mt-insights-recommendations-win_x64.exe` and `resources.neu` (and `WebView2Loader.dll` if applicable) in the same folder.
+1.  **Download** from the link above:
+    *   Executable: `mt-insights-recommendations-win_x64.exe`
+    *   Resources: `resources.neu`
+    *   *Note*: If using bundles created by `build-scripts/build-win.sh` (which might be the case for the files at the link), ensure `WebView2Loader.dll` is also present with the executable. It should be available at the same download location.
+2.  Place `mt-insights-recommendations-win_x64.exe`, `resources.neu`, and `WebView2Loader.dll` (if applicable) in the same folder.
 3.  Double-click `mt-insights-recommendations-win_x64.exe` to run.
 
 ### macOS
 
-1.  **Download**:
-    *   Executable: `mt-insights-recommendations-mac_universal` - `[Link to your hosted macOS universal binary]` (Locally: `dist/mt-insights-recommendations/mt-insights-recommendations-mac_universal`)
-    *   Resources: `resources.neu` (see above)
-2.  Place both `mt-insights-recommendations-mac_universal` and `resources.neu` in the same folder.
-3.  Make the binary executable: Open Terminal, navigate to the folder, and run `chmod +x mt-insights-recommendations-mac_universal`.
-4.  Double-click `mt-insights-recommendations-mac_universal` or run from the Terminal: `./mt-insights-recommendations-mac_universal`.
+1.  **Download** from the link above:
+    *   Executable: `mt-insights-recommendations-mac_universal` (recommended) or `mt-insights-recommendations-mac_x64` / `mt-insights-recommendations-mac_arm64`
+    *   Resources: `resources.neu`
+2.  Place both the chosen Mac executable and `resources.neu` in the same folder.
+3.  Make the binary executable: Open Terminal, navigate to the folder, and run (for example): `chmod +x mt-insights-recommendations-mac_universal`.
+4.  Double-click the executable or run from the Terminal: `./mt-insights-recommendations-mac_universal`.
 
 ### Linux
 
-1.  **Download**:
-    *   Executable: `mt-insights-recommendations-linux_x64` (or `_arm64`, `_armhf` depending on architecture) - `[Link to your hosted Linux binary]` (Locally: `dist/mt-insights-recommendations/mt-insights-recommendations-linux_x64`)
-    *   Resources: `resources.neu` (see above)
-2.  Place both the Linux binary and `resources.neu` in the same folder.
-3.  Make the binary executable: Open Terminal, navigate to the folder, and run `chmod +x mt-insights-recommendations-linux_x64` (adjust filename if using a different architecture).
+1.  **Download** from the link above:
+    *   Executable: `mt-insights-recommendations-linux_x64` (or `_arm64`, `_armhf` depending on your architecture)
+    *   Resources: `resources.neu`
+2.  Place both the chosen Linux binary and `resources.neu` in the same folder.
+3.  Make the binary executable: Open Terminal, navigate to the folder, and run (for example): `chmod +x mt-insights-recommendations-linux_x64`.
 4.  Run from the Terminal: `./mt-insights-recommendations-linux_x64`.
 
 ## Building from Source (Basic)
