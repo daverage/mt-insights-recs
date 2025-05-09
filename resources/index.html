@@ -99,9 +99,13 @@
         <div class="filter-container">
           <label for="badgeFilter"><strong>Badges:</strong></label>
           <select id="badgeFilter" multiple></select>
-          <label class="styled-checkbox">
+          <label class="styled-checkbox" title="Show all available data columns in the Recommendation Summary table. If unchecked, a core set of columns is shown.">
             <input type="checkbox" id="showAllColumnsToggle">
             <span class="checkmark"></span> Show all metrics
+          </label>
+          <label class="styled-checkbox" title="If checked, badges reflect the entire dataset, regardless of filters. If unchecked, badges update based on filtered data.">
+            <input type="checkbox" id="staticBadgesToggle">
+            <span class="checkmark"></span> Static Badges
           </label>
         </div>
         <div class="filter-container">
@@ -199,6 +203,7 @@
       <li>Use the "Badges" and "Experiences" dropdowns to filter the displayed data.</li>
       <li>You can search within the "Experiences" filter.</li>
       <li>Check "Show all metrics" to see all columns in the Recommendation Summary table; otherwise, a core set is shown.</li>
+      <li>Check "Static Badges" to make badges reflect the entire dataset, ignoring filters. Uncheck to have badges update with filters.</li>
       <li>Optionally, provide "Additional Instructions" for the AI report to guide its focus.</li>
     </ul>
     <p><strong>5. Download CSV:</strong></p>

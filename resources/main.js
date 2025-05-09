@@ -151,6 +151,23 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("LOG_MAIN_ERROR: dom.showAllColumnsToggle not found.");
     }
 
+    // Static Badges Toggle
+    if (dom.staticBadgesToggle) {
+        dom.staticBadgesToggle.addEventListener('change', () => {
+            const isChecked = dom.staticBadgesToggle.checked;
+            state.setStaticBadgesActive(isChecked);
+            if (isChecked) {
+                // When checked, badges are based on all data, then filters are re-applied
+                data.recalculateBadgesForAllData();
+            } else {
+                // When unchecked, badges are based on currently filtered data
+                data.applyFilters();
+            }
+        });
+    } else {
+        console.error("LOG_MAIN_ERROR: dom.staticBadgesToggle not found.");
+    }
+
 
     // Additional Instructions Textarea
     if (dom.additionalInstructionsTextarea) {

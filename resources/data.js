@@ -9,11 +9,17 @@ import { keyMap } from './config.js';
 
 /**
  * Parses the CSV file, maps data, calculates metrics, assigns initial badges, and updates UI.
+ * @param {File} file - The CSV file to process.
  * @returns {Promise<void>}
  */
-export async function processData() {
-  const file = dom.fileInput.files[0];
-  if (!file) return;
+export async function processData(file) {
+  // const file = dom.fileInput.files[0]; // This line is removed
+  if (!file) {
+    console.warn("LOG_DATA_PROCESSDATA_WARN: No file provided to processData.");
+    // Optionally, handle this case, e.g., by showing an error or returning early.
+    // For now, let's assume main.js ensures a file is passed.
+    return;
+  }
 
   dom.goBtn.disabled = true;
   dom.goBtn.classList.add('loading');
@@ -33,7 +39,11 @@ export async function processData() {
       }
       const rawData = parseResult.data;
 
+      console.log(`[DEBUG] CSV Parsed. Number of raw rows (including header if PapaParse misinterprets): ${rawData.length}`);
       if (rawData.length > 0) {
+          console.log("[DEBUG] First raw row data:", JSON.stringify(rawData[0]));
+      } else {
+          console.log("[DEBUG] rawData is empty after parsing.");
       }
 
       // --- Data Mapping ---
@@ -128,6 +138,13 @@ export async function processData() {
           };
       });
 
+      console.log(`[DEBUG] Number of mapped rows: ${mappedRows.length}`);
+      if (mappedRows.length > 0) {
+          console.log("[DEBUG] First mapped row data:", JSON.stringify(mappedRows[0]));
+      } else {
+          console.log("[DEBUG] mappedRows is empty after mapping.");
+      }
+
       state.setRows(mappedRows); // Update global state with all processed rows
 
       // --- Initial Badge Assignment (on all rows) ---
@@ -219,11 +236,11 @@ export function applyFilters() {
     }
 
 
-    // Re-calculate badges based *only* on the currently filtered data.
-    // This means percentiles (and thus badges) can change depending on the filter.
-    // If badges should always reflect percentiles of the *full* dataset,
-    // remove this call and rely on the initial assignment in processData.
-    if (processedData.length > 0) { // Only assign badges if there's data
+    // Conditionally assign badges
+    // If staticBadgesActive is true, badges are assumed to have been calculated on the full dataset
+    // by recalculateBadgesForAllData and should not be recalculated here.
+    // If staticBadgesActive is false, calculate badges based on the currently filtered data.
+    if (!state.getStaticBadgesActive() && processedData.length > 0) {
         assignBadges(processedData);
     }
 
@@ -263,6 +280,17 @@ export function applyFilters() {
     ui.renderSummaryHeader(); // Update button states etc.
 }
 
+export function recalculateBadgesForAllData() {
+    const allData = [...state.getRawData()]; // Get a fresh copy of all raw data
+    if (allData.length > 0) {
+        assignBadges(allData); // Assign badges based on the entire dataset
+        // Assuming assignBadges modifies the items in 'allData' directly,
+        // and that these items might be shared with what state.getRawData() holds,
+        // or if state.setRows is needed, that would be an internal detail of how rawData is managed.
+        // For now, we assume assignBadges updates the badge properties on the data elements.
+    }
+    applyFilters(); // Re-apply current filters and sorting, which will now respect staticBadges state
+}
 
 /**
  * Calculates percentiles and assigns badges based on the provided dataRows. Modifies the dataRows array directly.
