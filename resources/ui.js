@@ -81,7 +81,7 @@ export function renderTable() {
                         const tip = badgeDef.tip || badgeName;
                         // The outer span gets the styleClass for background/color, and generic badge-icon class
                         // The inner <i> tag ONLY gets the specific Font Awesome icon class(es)
-                        cellContent = `<span class="badge-icon ${styleClass}" title="${tip}"><i class="${iconClass}"></i></span>`;
+                        cellContent = `<span class="badge-icon ${styleClass} custom-badge-tooltip" data-badgetooltip="${tip}" title="${tip}"><i class="${iconClass}"></i></span>`;
                     } else {
                         // Fallback if no badgeDef found (e.g., badgeName is not in config)
                         cellContent = `<span class="badge-icon" title="${badgeName || 'Unknown Badge'}">${badgeUnicodeMap[badgeName] || badgeName || '-'}</span>`;
@@ -123,6 +123,7 @@ export function renderTable() {
         definitionsCard.open = true; 
     }
     renderDefinitionsKey(); // Ensure the content of the key is also rendered
+    setupCustomBadgeTooltips(); // Call custom badge tooltip setup
 }
 
 export function renderInsights() {
@@ -425,4 +426,50 @@ export function initialiseUI() { // Renamed initializeUI to initialiseUI
 
     // Set initial button states based on no data loaded
     actions.updateActionButtonsState();
+}
+
+// --- Custom Badge Tooltip Logic ---
+function setupCustomBadgeTooltips() {
+    // Remove any existing tooltip
+    let tooltipDiv = document.getElementById('custom-badge-tooltip');
+    if (!tooltipDiv) {
+        tooltipDiv = document.createElement('div');
+        tooltipDiv.id = 'custom-badge-tooltip';
+        tooltipDiv.style.position = 'absolute';
+        tooltipDiv.style.display = 'none';
+        tooltipDiv.style.zIndex = '9999';
+        tooltipDiv.className = 'custom-badge-tooltip-box';
+        document.body.appendChild(tooltipDiv);
+    }
+
+    // Remove old listeners if any
+    document.querySelectorAll('.badge-icon.custom-badge-tooltip').forEach(el => {
+        el.removeEventListener('mouseenter', el._badgeTooltipEnter);
+        el.removeEventListener('mouseleave', el._badgeTooltipLeave);
+        el.removeEventListener('mousemove', el._badgeTooltipMove);
+    });
+
+    document.querySelectorAll('.badge-icon.custom-badge-tooltip').forEach(el => {
+        el._badgeTooltipEnter = function(e) {
+            const html = el.getAttribute('data-badgetooltip');
+            if (!html) return;
+            tooltipDiv.innerHTML = html;
+            tooltipDiv.style.display = 'block';
+            // Position below and to the right of the badge
+            const rect = el.getBoundingClientRect();
+            tooltipDiv.style.left = (window.scrollX + rect.right + 8) + 'px';
+            tooltipDiv.style.top = (window.scrollY + rect.top) + 'px';
+        };
+        el._badgeTooltipMove = function(e) {
+            // Follow the mouse
+            tooltipDiv.style.left = (e.pageX + 12) + 'px';
+            tooltipDiv.style.top = (e.pageY - 10) + 'px';
+        };
+        el._badgeTooltipLeave = function() {
+            tooltipDiv.style.display = 'none';
+        };
+        el.addEventListener('mouseenter', el._badgeTooltipEnter);
+        el.addEventListener('mousemove', el._badgeTooltipMove);
+        el.addEventListener('mouseleave', el._badgeTooltipLeave);
+    });
 }

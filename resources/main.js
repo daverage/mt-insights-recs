@@ -7,7 +7,6 @@ import { showError } from './utils.js';
 
 // Wait for the DOM to be fully loaded before running setup code
 document.addEventListener('DOMContentLoaded', () => {
-
     // --- Initial Setup ---
     // Initialize UI elements that don't depend on data yet
     ui.renderAiReportHeader(false); // Example: Initial state for AI report header
@@ -151,23 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("LOG_MAIN_ERROR: dom.showAllColumnsToggle not found.");
     }
 
-    // Static Badges Toggle
-    if (dom.staticBadgesToggle) {
-        dom.staticBadgesToggle.addEventListener('change', () => {
-            const isChecked = dom.staticBadgesToggle.checked;
-            state.setStaticBadgesActive(isChecked);
-            if (isChecked) {
-                // When checked, badges are based on all data, then filters are re-applied
-                data.recalculateBadgesForAllData();
-            } else {
-                // When unchecked, badges are based on currently filtered data
-                data.applyFilters();
-            }
-        });
-    } else {
-        console.error("LOG_MAIN_ERROR: dom.staticBadgesToggle not found.");
-    }
-
 
     // Additional Instructions Textarea
     if (dom.additionalInstructionsTextarea) {
@@ -268,5 +250,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ... existing event listeners in main.js ...
 });
+
+/* --- ZOOM SUPPORT: Ctrl + and Ctrl - to zoom in and out --- */
+let zoomLevel = 0.85;
+const ZOOM_STEP = 0.1;
+const ZOOM_MIN = 0.5;
+const ZOOM_MAX = 2.0;
+
+function applyZoom() {
+  const wrapper = document.getElementById('wrapper');
+  if(wrapper) {
+    wrapper.style.transform = `scale(${zoomLevel})`;
+    wrapper.style.transformOrigin = 'top left';
+    wrapper.style.width = `${(1/zoomLevel)*100}%`;
+    wrapper.style.height = `${(1/zoomLevel)*100}%`;
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && !e.shiftKey) {
+    if (e.key === '+' || e.key === '=') {
+      zoomLevel = Math.min(ZOOM_MAX, zoomLevel + ZOOM_STEP);
+      applyZoom();
+      e.preventDefault();
+    } else if (e.key === '-') {
+      zoomLevel = Math.max(ZOOM_MIN, zoomLevel - ZOOM_STEP);
+      applyZoom();
+      e.preventDefault();
+    } else if (e.key === '0') {
+      zoomLevel = 0.85;
+      applyZoom();
+      e.preventDefault();
+    }
+  }
+});
+
+window.addEventListener('DOMContentLoaded', applyZoom);
 
 // ... rest of main.js ...

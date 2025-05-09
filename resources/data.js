@@ -445,13 +445,28 @@ export function assignBadges(dataRows) {
             (lowImpressionBoost * lowImpBoostWeight);
         r.potentialScore = Math.max(0, Math.min(100, parseFloat(currentPotentialScore.toFixed(1))));
 
-        // --- Assign highest priority badge ---
+        // --- Assign highest priority badge and tooltip ---
         const validBadges = badges.filter(b => b);
         const priorityOrder = badgeDefinitions.map(b => b.label);
-        const chosenLabel = priorityOrder.find(p => validBadges.some(b => b.label === p));
-        if (chosenLabel) {
-          const chosenBadge = validBadges.find(b => b.label === chosenLabel);
-          r.flag = `<span class="badge-icon ${chosenBadge.styleClass}" title="${chosenBadge.label}: ${chosenBadge.tip}"><i class="${chosenBadge.icon}"></i></span>`; // Changed chosenBadge.class to chosenBadge.styleClass
+        // Get the top 3 badges by priority order
+        const top3Labels = priorityOrder.filter(p => validBadges.some(b => b.label === p)).slice(0, 3);
+        const top3Badges = top3Labels.map(label => validBadges.find(b => b.label === label)).filter(Boolean);
+        // Build tooltip HTML and plain text for the top 3 badges
+        let tooltipHtml = '';
+        let tooltipText = '';
+        if (top3Badges.length > 0) {
+          tooltipHtml = top3Badges.map(b =>
+            `<span style='display:inline-flex;align-items:flex-start;margin-bottom:2px;'>
+  <i class="badge-icon ${b.icon} ${b.styleClass}" style='margin-right:4px;margin-top:0px;'></i>
+  <span><b>${b.label}</b><br>${b.tip}</span>
+</span>`
+          ).join('<br>');
+          tooltipText = top3Badges.map(b => `${b.label}: ${b.tip}`).join('\n');
+        }
+        if (top3Badges.length > 0) {
+          // Use the highest priority badge for the icon, but tooltip shows all 3
+          const chosenBadge = top3Badges[0];
+          r.flag = `<span class="badge-icon custom-badge-tooltip ${chosenBadge.styleClass}" data-badgetooltip="${tooltipHtml.replace(/"/g, '&quot;')}"><i class="${chosenBadge.icon}"></i></span>`;
           r.badgeText = chosenBadge.label;
         } else {
           r.flag = '';
