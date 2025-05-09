@@ -9,11 +9,17 @@ import { keyMap } from './config.js';
 
 /**
  * Parses the CSV file, maps data, calculates metrics, assigns initial badges, and updates UI.
+ * @param {File} file - The CSV file to process.
  * @returns {Promise<void>}
  */
-export async function processData() {
-  const file = dom.fileInput.files[0];
-  if (!file) return;
+export async function processData(file) {
+  // const file = dom.fileInput.files[0]; // This line is removed
+  if (!file) {
+    console.warn("LOG_DATA_PROCESSDATA_WARN: No file provided to processData.");
+    // Optionally, handle this case, e.g., by showing an error or returning early.
+    // For now, let's assume main.js ensures a file is passed.
+    return;
+  }
 
   dom.goBtn.disabled = true;
   dom.goBtn.classList.add('loading');
@@ -33,7 +39,11 @@ export async function processData() {
       }
       const rawData = parseResult.data;
 
+      console.log(`[DEBUG] CSV Parsed. Number of raw rows (including header if PapaParse misinterprets): ${rawData.length}`);
       if (rawData.length > 0) {
+          console.log("[DEBUG] First raw row data:", JSON.stringify(rawData[0]));
+      } else {
+          console.log("[DEBUG] rawData is empty after parsing.");
       }
 
       // --- Data Mapping ---
@@ -127,6 +137,13 @@ export async function processData() {
               NewActionURL
           };
       });
+
+      console.log(`[DEBUG] Number of mapped rows: ${mappedRows.length}`);
+      if (mappedRows.length > 0) {
+          console.log("[DEBUG] First mapped row data:", JSON.stringify(mappedRows[0]));
+      } else {
+          console.log("[DEBUG] mappedRows is empty after mapping.");
+      }
 
       state.setRows(mappedRows); // Update global state with all processed rows
 
