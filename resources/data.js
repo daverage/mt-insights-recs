@@ -219,11 +219,11 @@ export function applyFilters() {
     }
 
 
-    // Re-calculate badges based *only* on the currently filtered data.
-    // This means percentiles (and thus badges) can change depending on the filter.
-    // If badges should always reflect percentiles of the *full* dataset,
-    // remove this call and rely on the initial assignment in processData.
-    if (processedData.length > 0) { // Only assign badges if there's data
+    // Conditionally assign badges
+    // If staticBadgesActive is true, badges are assumed to have been calculated on the full dataset
+    // by recalculateBadgesForAllData and should not be recalculated here.
+    // If staticBadgesActive is false, calculate badges based on the currently filtered data.
+    if (!state.getStaticBadgesActive() && processedData.length > 0) {
         assignBadges(processedData);
     }
 
@@ -263,6 +263,17 @@ export function applyFilters() {
     ui.renderSummaryHeader(); // Update button states etc.
 }
 
+export function recalculateBadgesForAllData() {
+    const allData = [...state.getRawData()]; // Get a fresh copy of all raw data
+    if (allData.length > 0) {
+        assignBadges(allData); // Assign badges based on the entire dataset
+        // Assuming assignBadges modifies the items in 'allData' directly,
+        // and that these items might be shared with what state.getRawData() holds,
+        // or if state.setRows is needed, that would be an internal detail of how rawData is managed.
+        // For now, we assume assignBadges updates the badge properties on the data elements.
+    }
+    applyFilters(); // Re-apply current filters and sorting, which will now respect staticBadges state
+}
 
 /**
  * Calculates percentiles and assigns badges based on the provided dataRows. Modifies the dataRows array directly.

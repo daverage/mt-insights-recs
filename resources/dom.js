@@ -20,6 +20,7 @@ export const aiReportSection = document.getElementById('aiReportSection');
 export const processLoader = document.getElementById('processLoader');
 export const aiLoader = document.getElementById('aiLoader');
 export const showAllColumnsToggle = document.getElementById('showAllColumnsToggle');
+export const staticBadgesToggle = document.getElementById('staticBadgesToggle'); // Added line
 export const summaryHeader = document.getElementById('summaryHeader');
 export const aiReportHeader = document.getElementById('aiReportHeader');
 export const additionalInstructionsContainer = document.getElementById('additionalInstructionsContainer');

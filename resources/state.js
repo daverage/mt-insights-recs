@@ -8,6 +8,7 @@ export let isSdkReady = false;
 export let isDataProcessed = false;
 export let showAllColumns = false;
 let geminiApiKeyFromStorage = null; // Renamed for clarity
+let staticBadgesActive = false; // Added for static badges feature
 
 // --- State Modifiers ---
 export function setRows(newRows) {
@@ -30,6 +31,10 @@ export function setDataProcessed(status) {
 
 export function setShowAllColumns(status) {
     showAllColumns = status;
+}
+
+export function setStaticBadgesActive(status) { // Added for static badges feature
+    staticBadgesActive = status;
 }
 
 export function setSdkReady(status) {
@@ -83,6 +88,10 @@ export function getIsDataProcessed() {
 
 export function getShowAllColumns() {
     return showAllColumns;
+}
+
+export function getStaticBadgesActive() { // Added for static badges feature
+    return staticBadgesActive;
 }
 
 export function getIsSdkReady() {
